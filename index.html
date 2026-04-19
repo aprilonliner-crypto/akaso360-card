@@ -15,13 +15,17 @@
 
   /* ── Header ── */
   .hdr {
-    background: #D40000; position: relative;
+    background: #F5C518; position: relative;
     padding: 40px 48px 36px; overflow: hidden;
   }
   .hdr-circle {
     position: absolute; right: -30px; top: -30px;
     width: 160px; height: 160px; border-radius: 50%;
     background: #003082;
+  }
+  .hdr-sig {
+    font-size: 12px; font-weight: 600; color: rgba(0,0,0,0.4);
+    letter-spacing: 1px; margin-top: 10px; position: relative; z-index: 1;
   }
   .hdr-tri {
     position: absolute; left: 48px; bottom: -1px;
@@ -31,11 +35,11 @@
     border-bottom: 28px solid #fff;
   }
   .hdr-title {
-    font-size: 48px; font-weight: 800; color: #fff;
+    font-size: 48px; font-weight: 800; color: #1a1a1a;
     letter-spacing: 3px; line-height: 1.15; position: relative; z-index: 1;
   }
   .hdr-sub-line {
-    font-size: 20px; font-weight: 400; color: rgba(255,255,255,0.75);
+    font-size: 20px; font-weight: 400; color: rgba(0,0,0,0.55);
     margin-top: 4px; position: relative; z-index: 1;
   }
   .hdr-date {
@@ -142,7 +146,7 @@
     padding: 14px 48px; font-size: 20px; font-weight: 800;
     letter-spacing: 1px; color: #fff; position: relative;
   }
-  .sec-bar-red { background: #D40000; }
+  .sec-bar-red { background: #555; }
   .sec-bar-blue { background: #003082; }
   .sec-bar::after {
     content: ''; position: absolute; right: 48px; top: 50%;
@@ -217,7 +221,7 @@
     display: flex; align-items: center; justify-content: center;
     gap: 20px; padding: 28px 0 20px;
   }
-  .fg-circle { width: 16px; height: 16px; border-radius: 50%; background: #D40000; }
+  .fg-circle { width: 16px; height: 16px; border-radius: 50%; background: #1a1a1a; }
   .fg-square { width: 14px; height: 14px; background: #003082; }
   .fg-tri {
     width: 0; height: 0;
@@ -237,6 +241,7 @@
     <div class="hdr-date">04.19</div>
     <div class="hdr-title">AKASO 360</div>
     <div class="hdr-sub-line">项目判断卡</div>
+    <div class="hdr-sig">彭蕾 × C2（向量世界）</div>
   </div>
   <div class="hdr-meta">基于 42 条客诉归因校准 + 28,511 条 VOC + 飞书群沟通记录</div>
 
@@ -416,7 +421,6 @@
     <div class="v-accent"></div>
     <div class="v-label">核心判断</div>
     <div class="v-text">产品经理在帮乙方跟用户解释，而不是帮用户跟乙方要东西。归因失真不是能力问题，是立场问题。质量改善主导人在推流程，不是在推结果。</div>
-    <div class="v-sig">彭蕾 × C2（向量世界）</div>
   </div>
 
   <!-- Footer -->
