@@ -1,0 +1,367 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AKASO 360 · 产品项目卡</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    margin: 0; padding: 0; background: #fff;
+    font-family: system-ui, -apple-system, "Helvetica Neue", sans-serif;
+    color: #1a1a1a; -webkit-font-smoothing: antialiased;
+  }
+  .page { width: 960px; margin: 0 auto; background: #fff; }
+
+  /* ── Header ── */
+  .hdr {
+    background: #F5C518; position: relative;
+    padding: 40px 48px 36px; overflow: hidden;
+  }
+  .hdr-circle {
+    position: absolute; right: -30px; top: -30px;
+    width: 160px; height: 160px; border-radius: 50%;
+    background: #003082;
+  }
+  .hdr-tri {
+    position: absolute; left: 48px; bottom: -1px;
+    width: 0; height: 0;
+    border-left: 36px solid transparent;
+    border-right: 36px solid transparent;
+    border-bottom: 28px solid #fff;
+  }
+  .hdr-title {
+    font-size: 46px; font-weight: 800; color: #1a1a1a;
+    letter-spacing: 2px; line-height: 1.15; position: relative; z-index: 1;
+  }
+  .hdr-sub {
+    font-size: 20px; font-weight: 400; color: rgba(0,0,0,0.55);
+    margin-top: 4px; position: relative; z-index: 1;
+  }
+  .hdr-sig {
+    font-size: 12px; font-weight: 600; color: rgba(0,0,0,0.35);
+    letter-spacing: 1px; margin-top: 10px; position: relative; z-index: 1;
+  }
+  .hdr-date {
+    position: absolute; right: 18px; top: 32px;
+    font-size: 18px; font-weight: 700; color: #fff;
+    z-index: 2; letter-spacing: 1px;
+  }
+  .hdr-meta {
+    padding: 12px 48px 0; font-size: 12px; color: #999; line-height: 1.6;
+  }
+
+  /* ── Spec DNA Grid ── */
+  .spec-wrap { padding: 32px 48px 0; }
+  .sec-lbl {
+    font-size: 11px; font-weight: 800; letter-spacing: 4px;
+    color: #bbb; margin-bottom: 16px;
+  }
+  .spec-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 3px; background: #e0e0e0; border: 3px solid #e0e0e0;
+    margin-bottom: 36px;
+  }
+  .sp {
+    background: #fff; padding: 14px 16px;
+  }
+  .sp-val {
+    font-size: 18px; font-weight: 800; line-height: 1.2; margin-bottom: 2px;
+  }
+  .sp-key {
+    font-size: 10px; font-weight: 600; color: #999; letter-spacing: 1px;
+  }
+  .sp-gap {
+    font-size: 10px; color: #D40000; font-weight: 600; margin-top: 4px;
+  }
+  .sp.sp-warn { background: #fff5f5; }
+  .sp.sp-dark { background: #1a1a1a; }
+  .sp.sp-dark .sp-val { color: #fff; }
+  .sp.sp-dark .sp-key { color: #666; }
+  .sp.sp-dark .sp-gap { color: #ff6b6b; }
+  .sp.sp-yel { background: #FFF8DC; }
+
+  /* ── Trend Panel ── */
+  .trend-panel {
+    display: flex; margin: 0 48px 32px; border: 2px solid #e0e0e0;
+    overflow: hidden;
+  }
+  .tp-accent {
+    width: 8px; flex-shrink: 0;
+  }
+  .tp-accent-red { background: #D40000; }
+  .tp-accent-dark { background: #1a1a1a; }
+  .tp-accent-blue { background: #003082; }
+  .tp-head {
+    width: 220px; flex-shrink: 0; padding: 24px 20px;
+    display: flex; flex-direction: column; justify-content: center;
+    border-right: 1px solid #eee;
+  }
+  .tp-num {
+    font-size: 44px; font-weight: 800; line-height: 1;
+  }
+  .tp-from {
+    font-size: 13px; color: #999; margin-top: 4px;
+  }
+  .tp-tag {
+    display: inline-block; font-size: 12px; font-weight: 700;
+    padding: 3px 10px; color: #fff; margin-top: 8px;
+  }
+  .tp-label {
+    font-size: 14px; font-weight: 700; color: #666; margin-top: 8px;
+    letter-spacing: 1px;
+  }
+  /* Trend bars */
+  .tp-bars { margin-top: 12px; }
+  .tp-bar-row {
+    display: flex; align-items: center; gap: 6px; margin-bottom: 4px;
+  }
+  .tp-bar-lbl { font-size: 9px; color: #bbb; width: 28px; text-align: right; }
+  .tp-bar-track { flex: 1; height: 5px; background: #f0f0f0; }
+  .tp-bar-fill { height: 100%; }
+
+  .tp-body {
+    flex: 1; padding: 24px 24px;
+  }
+  .tp-body-title {
+    font-size: 11px; font-weight: 800; letter-spacing: 2px;
+    color: #999; margin-bottom: 12px;
+  }
+  .tp-root {
+    list-style: none; padding: 0;
+  }
+  .tp-root li {
+    font-size: 13px; line-height: 1.65; color: #333;
+    margin-bottom: 8px; padding-left: 14px; position: relative;
+  }
+  .tp-root li::before {
+    content: ''; position: absolute; left: 0; top: 9px;
+    width: 6px; height: 6px;
+  }
+  .tp-root.root-red li::before { background: #D40000; }
+  .tp-root.root-dark li::before { background: #1a1a1a; }
+  .tp-root.root-blue li::before { background: #003082; }
+  .tp-root li strong { font-weight: 700; color: #1a1a1a; }
+  .tp-root li .spec-ref {
+    font-size: 11px; color: #999; font-style: italic;
+  }
+
+  /* ── Gap Section ── */
+  .gap-wrap { padding: 0 48px; margin-bottom: 8px; }
+  .gap-grid {
+    display: grid; grid-template-columns: repeat(3, 1fr);
+    gap: 3px; background: #1a1a1a; border: 3px solid #1a1a1a;
+  }
+  .gap-cell {
+    background: #fff; padding: 18px 16px; text-align: center;
+  }
+  .gap-cell.gap-red { background: #D40000; color: #fff; }
+  .gap-cell.gap-red .gc-val { color: #fff; }
+  .gap-cell.gap-red .gc-key { color: rgba(255,255,255,0.6); }
+  .gap-cell.gap-red .gc-note { color: rgba(255,255,255,0.7); }
+  .gc-val { font-size: 28px; font-weight: 800; line-height: 1; }
+  .gc-key { font-size: 11px; font-weight: 600; color: #999; margin-top: 4px; }
+  .gc-note { font-size: 10px; color: #bbb; margin-top: 6px; }
+
+  /* ── Verdict ── */
+  .verdict {
+    background: #1a1a1a; padding: 28px 48px 32px;
+    margin-top: 8px; position: relative;
+  }
+  .verdict .v-accent {
+    position: absolute; left: 48px; top: -12px;
+    width: 24px; height: 24px; background: #D40000;
+    transform: rotate(45deg);
+  }
+  .v-label {
+    font-size: 12px; font-weight: 800; letter-spacing: 3px;
+    color: #F5C518; margin-bottom: 8px;
+  }
+  .v-text {
+    font-size: 15px; font-weight: 500; line-height: 1.85; color: #fff;
+  }
+
+  /* ── Footer ── */
+  .footer-geo {
+    display: flex; align-items: center; justify-content: center;
+    gap: 20px; padding: 28px 0 20px;
+  }
+  .fg-c { width: 16px; height: 16px; border-radius: 50%; background: #1a1a1a; }
+  .fg-s { width: 14px; height: 14px; background: #003082; }
+  .fg-t {
+    width: 0; height: 0;
+    border-left: 9px solid transparent; border-right: 9px solid transparent;
+    border-bottom: 16px solid #F5C518;
+  }
+</style>
+</head>
+<body>
+<div class="page">
+
+  <!-- ══ Header ══ -->
+  <div class="hdr">
+    <div class="hdr-circle"></div>
+    <div class="hdr-tri"></div>
+    <div class="hdr-date">04.19</div>
+    <div class="hdr-title">AKASO 360</div>
+    <div class="hdr-sub">产品项目卡</div>
+    <div class="hdr-sig">彭蕾 × C2（向量世界）</div>
+  </div>
+  <div class="hdr-meta">基于产品规格书 V1.0（陈鹏飞拟制）+ 28,511 条 VOC + 42 条客诉归因校准</div>
+
+  <!-- ══ Spec DNA ══ -->
+  <div class="spec-wrap">
+    <div class="sec-lbl">SPEC DNA</div>
+    <div class="spec-grid">
+      <div class="sp">
+        <div class="sp-val">安霸 H22</div>
+        <div class="sp-key">主控芯片</div>
+      </div>
+      <div class="sp sp-warn">
+        <div class="sp-val" style="color:#D40000;">H.264 8bit</div>
+        <div class="sp-key">视频编码</div>
+        <div class="sp-gap">行业已进入 H.265 10bit</div>
+      </div>
+      <div class="sp">
+        <div class="sp-val">100 Mbps</div>
+        <div class="sp-key">录制码率 · VBR</div>
+      </div>
+      <div class="sp sp-warn">
+        <div class="sp-val" style="color:#D40000;">2 × 双声道</div>
+        <div class="sp-key">麦克风</div>
+        <div class="sp-gap">竞品 3-4 个 · 空间音频</div>
+      </div>
+      <div class="sp sp-warn">
+        <div class="sp-val" style="color:#D40000;">0 — 40°C</div>
+        <div class="sp-key">工作温度</div>
+        <div class="sp-gap">低温续航 + 高温降频双暴露</div>
+      </div>
+      <div class="sp">
+        <div class="sp-val">USB 2.0</div>
+        <div class="sp-key">传输接口</div>
+        <div class="sp-gap">竞品 USB 3.0</div>
+      </div>
+      <div class="sp sp-dark">
+        <div class="sp-val">QooCam App</div>
+        <div class="sp-key">配套软件</div>
+        <div class="sp-gap">非自研 · 不可控</div>
+      </div>
+      <div class="sp sp-yel">
+        <div class="sp-val">沿用 QooCam 3</div>
+        <div class="sp-key">UI 交互</div>
+        <div class="sp-gap">未针对 AKASO 用户定制</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══ Three Trends ══ -->
+  <div style="padding: 0 48px;"><div class="sec-lbl">THREE TRENDS · 时间趋势</div></div>
+
+  <!-- Trend 1: Star Rating -->
+  <div class="trend-panel">
+    <div class="tp-accent tp-accent-dark"></div>
+    <div class="tp-head">
+      <div class="tp-num">3.83</div>
+      <div class="tp-from">← 4.73（种子期）</div>
+      <div class="tp-tag" style="background:#D40000;">▼ 19%</div>
+      <div class="tp-label">星级走势</div>
+      <div class="tp-bars">
+        <div class="tp-bar-row"><span class="tp-bar-lbl">种子</span><div class="tp-bar-track"><div class="tp-bar-fill" style="width:95%;background:rgba(0,0,0,0.12);"></div></div></div>
+        <div class="tp-bar-row"><span class="tp-bar-lbl">有机</span><div class="tp-bar-track"><div class="tp-bar-fill" style="width:77%;background:#1a1a1a;"></div></div></div>
+      </div>
+    </div>
+    <div class="tp-body">
+      <div class="tp-body-title">规格书根因</div>
+      <ul class="tp-root root-dark">
+        <li><strong>H.264 8bit 编码</strong>——文件体积大、画质天花板低、弱光噪点压不住。竞品已全面转 H.265 10bit <span class="spec-ref">→ 规格书 p.66「视频编码」</span></li>
+        <li><strong>2 个麦克风</strong>——只能做基础立体声，无法实现空间音频。VOC 音频负面是竞品的 4-8 倍 <span class="spec-ref">→ 规格书 p.48「麦克风」</span></li>
+        <li><strong>每次拍摄存 3 个文件</strong>（proxy + 2 鱼眼）——用户不能直出，必须经 APP 拼接编辑才能分享。360 相机的"产品"有一半在软件 <span class="spec-ref">→ 规格书 p.60「视频存储方式」</span></li>
+      </ul>
+    </div>
+  </div>
+
+  <!-- Trend 2: Battery (RED - warning) -->
+  <div class="trend-panel" style="border-color:#D40000;">
+    <div class="tp-accent tp-accent-red"></div>
+    <div class="tp-head">
+      <div class="tp-num" style="color:#D40000;">14.7%</div>
+      <div class="tp-from">← 1.3%（种子期）</div>
+      <div class="tp-tag" style="background:#D40000;">× 11</div>
+      <div class="tp-label" style="color:#D40000;">电池负面</div>
+      <div class="tp-bars">
+        <div class="tp-bar-row"><span class="tp-bar-lbl">种子</span><div class="tp-bar-track"><div class="tp-bar-fill" style="width:7%;background:#ffcdd2;"></div></div></div>
+        <div class="tp-bar-row"><span class="tp-bar-lbl">有机</span><div class="tp-bar-track"><div class="tp-bar-fill" style="width:74%;background:#D40000;"></div></div></div>
+      </div>
+    </div>
+    <div class="tp-body">
+      <div class="tp-body-title">规格书根因</div>
+      <ul class="tp-root root-red">
+        <li><strong>工作温度 0-40°C</strong>——冬季上量后低温续航问题集中爆发。规格书没有给低温场景留余量 <span class="spec-ref">→ 规格书 p.78「工作温度」</span></li>
+        <li><strong>电池规格"客户指定"</strong>——规格书里没有容量、放电曲线、保护策略的任何定义。飞书群确认"电池本身没有过热保护功能" <span class="spec-ref">→ 规格书 p.51「电池」</span></li>
+        <li><strong>100Mbps 码率 + H22 功耗</strong>——高清录制时 SoC 持续满载，加速电池消耗并触发过热降频 <span class="spec-ref">→ 规格书 p.69「码率」+ p.31「主控」</span></li>
+      </ul>
+    </div>
+  </div>
+
+  <!-- Trend 3: APP -->
+  <div class="trend-panel">
+    <div class="tp-accent tp-accent-blue"></div>
+    <div class="tp-head">
+      <div class="tp-num" style="color:#003082;">19%</div>
+      <div class="tp-from">← 6%（种子期）</div>
+      <div class="tp-tag" style="background:#003082;">× 3</div>
+      <div class="tp-label" style="color:#003082;">APP 负面</div>
+      <div class="tp-bars">
+        <div class="tp-bar-row"><span class="tp-bar-lbl">种子</span><div class="tp-bar-track"><div class="tp-bar-fill" style="width:30%;background:#b3c5e6;"></div></div></div>
+        <div class="tp-bar-row"><span class="tp-bar-lbl">有机</span><div class="tp-bar-track"><div class="tp-bar-fill" style="width:95%;background:#003082;"></div></div></div>
+      </div>
+    </div>
+    <div class="tp-body">
+      <div class="tp-body-title">规格书根因</div>
+      <ul class="tp-root root-blue">
+        <li><strong>软件 = QooCam App</strong>——不是 AKASO 自研，是看到科技的产品。AKASO 对 APP 质量、迭代节奏、bug 修复没有控制权 <span class="spec-ref">→ 规格书「配套软件」</span></li>
+        <li><strong>UI"完全沿用 QooCam 3"</strong>——没有针对 AKASO 用户群体做任何定制。$199 用户和 $399 用户的使用习惯不同 <span class="spec-ref">→ 规格书「UI 交互」</span></li>
+        <li><strong>360 视频必须经 APP 编辑</strong>——拍完是鱼眼原始文件，不能直接分享到社交平台。APP 不是"附加功能"，是产品工作流的必经环节 <span class="spec-ref">→ 规格书 p.60「存储方式」</span></li>
+      </ul>
+    </div>
+  </div>
+
+  <!-- ══ Gap Grid ══ -->
+  <div class="gap-wrap">
+    <div class="sec-lbl">PRODUCT GAP · 产品定义缺口</div>
+    <div class="gap-grid">
+      <div class="gap-cell gap-red">
+        <div class="gc-val">2×</div>
+        <div class="gc-key">弱光画质差距</div>
+        <div class="gc-note">H.264 8bit 天花板</div>
+      </div>
+      <div class="gap-cell gap-red">
+        <div class="gc-val">4-8×</div>
+        <div class="gc-key">音频差距</div>
+        <div class="gc-note">2 mic vs 竞品 3-4 mic</div>
+      </div>
+      <div class="gap-cell gap-red">
+        <div class="gc-val">最末</div>
+        <div class="gc-key">电池续航</div>
+        <div class="gc-note">0-40°C · 无保护策略</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══ Verdict ══ -->
+  <div class="verdict">
+    <div class="v-accent"></div>
+    <div class="v-label">核心判断</div>
+    <div class="v-text">规格书里"客户指定"出现 11 次，软件写的是"沿用 QooCam"——这不是一款被定义过的产品，是一套被采购回来的方案。三条趋势恶化的根因都在产品定义层：编码落后一代、麦克风少一半、APP 不在自己手里。$199 的价格优势正在被产品定义的欠账吃掉。</div>
+  </div>
+
+  <div class="footer-geo">
+    <div class="fg-c"></div>
+    <div class="fg-s"></div>
+    <div class="fg-t"></div>
+  </div>
+
+</div>
+</body>
+</html>
