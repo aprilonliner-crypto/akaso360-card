@@ -1,0 +1,431 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AKASO 360 · 项目判断卡</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    margin: 0; padding: 0; background: #fff;
+    font-family: system-ui, -apple-system, "Helvetica Neue", sans-serif;
+    color: #1a1a1a; -webkit-font-smoothing: antialiased;
+  }
+  .page { width: 960px; margin: 0 auto; background: #fff; }
+
+  /* ── Header ── */
+  .hdr {
+    background: #D40000; position: relative;
+    padding: 40px 48px 36px; overflow: hidden;
+  }
+  .hdr-circle {
+    position: absolute; right: -30px; top: -30px;
+    width: 160px; height: 160px; border-radius: 50%;
+    background: #003082;
+  }
+  .hdr-tri {
+    position: absolute; left: 48px; bottom: -1px;
+    width: 0; height: 0;
+    border-left: 36px solid transparent;
+    border-right: 36px solid transparent;
+    border-bottom: 28px solid #fff;
+  }
+  .hdr-title {
+    font-size: 48px; font-weight: 800; color: #fff;
+    letter-spacing: 3px; line-height: 1.15; position: relative; z-index: 1;
+  }
+  .hdr-sub-line {
+    font-size: 20px; font-weight: 400; color: rgba(255,255,255,0.75);
+    margin-top: 4px; position: relative; z-index: 1;
+  }
+  .hdr-date {
+    position: absolute; right: 18px; top: 32px;
+    font-size: 18px; font-weight: 700; color: #fff;
+    z-index: 2; letter-spacing: 1px;
+  }
+  .hdr-meta {
+    padding: 12px 48px 0; font-size: 13px; color: #999;
+    line-height: 1.6;
+  }
+
+  /* ── Data Section ── */
+  .data-wrap { padding: 32px 48px 0; }
+  .data-lbl {
+    font-size: 11px; font-weight: 800; letter-spacing: 4px;
+    color: #bbb; margin-bottom: 20px;
+  }
+  .data-row {
+    display: flex; gap: 32px; margin-bottom: 28px;
+  }
+  .data-left { flex: 3; }
+  .data-right { flex: 1; display: flex; flex-direction: column; justify-content: center; align-items: center; }
+
+  /* Horizontal bar chart */
+  .bar-row {
+    display: flex; align-items: center; margin-bottom: 6px;
+  }
+  .bar-label {
+    width: 72px; font-size: 11px; font-weight: 600;
+    color: #999; text-align: right; padding-right: 12px;
+    flex-shrink: 0;
+  }
+  .bar-track { flex: 1; height: 26px; position: relative; }
+  .bar-fill {
+    height: 100%; display: flex; align-items: center;
+    justify-content: flex-end; padding-right: 10px;
+    font-size: 13px; font-weight: 700; color: #fff;
+    transition: width 0.3s;
+  }
+  .bar-fill.bf-yel { color: #1a1a1a; }
+
+  /* Deviation callout */
+  .dev-ring {
+    width: 110px; height: 110px; border-radius: 50%;
+    border: 5px solid #D40000; display: flex;
+    flex-direction: column; align-items: center; justify-content: center;
+  }
+  .dev-ring .dr-num {
+    font-size: 36px; font-weight: 800; color: #D40000; line-height: 1;
+  }
+  .dev-ring .dr-unit {
+    font-size: 11px; font-weight: 600; color: #999; margin-top: 2px;
+  }
+  .dev-ring .dr-lbl {
+    font-size: 10px; font-weight: 700; color: #D40000;
+    letter-spacing: 1px; margin-top: 4px;
+  }
+
+  /* Metric circles */
+  .metrics {
+    display: flex; justify-content: space-between;
+    padding: 0 48px; margin-bottom: 36px;
+  }
+  .mc {
+    display: flex; flex-direction: column; align-items: center;
+  }
+  .mc-circle {
+    width: 120px; height: 120px; border-radius: 50%;
+    display: flex; flex-direction: column;
+    align-items: center; justify-content: center;
+  }
+  .mc-dark { background: #1a1a1a; }
+  .mc-red { background: #D40000; }
+  .mc-blue { background: #003082; }
+  .mc-yel { background: #F5C518; }
+  .mc-num {
+    font-size: 32px; font-weight: 800; color: #fff; line-height: 1;
+  }
+  .mc-yel .mc-num { color: #1a1a1a; }
+  .mc-from {
+    font-size: 11px; color: rgba(255,255,255,0.6); margin-top: 3px;
+  }
+  .mc-yel .mc-from { color: rgba(0,0,0,0.4); }
+  .mc-tag {
+    display: inline-block; font-size: 11px; font-weight: 700;
+    padding: 2px 8px; color: #fff; margin-top: 4px;
+  }
+  .mc-yel .mc-tag { color: #1a1a1a; }
+  .mc-label {
+    font-size: 12px; font-weight: 600; color: #999; margin-top: 10px;
+  }
+  /* Trend mini bars under circles */
+  .mc-trends { margin-top: 8px; width: 100px; }
+  .mc-tr {
+    display: flex; align-items: center; gap: 4px; margin-bottom: 3px;
+  }
+  .mc-tr-lbl { font-size: 9px; color: #bbb; width: 20px; text-align: right; }
+  .mc-tr-track { flex: 1; height: 4px; background: #f0f0f0; }
+  .mc-tr-fill { height: 100%; }
+
+  /* ── Section Bar ── */
+  .sec-bar {
+    padding: 14px 48px; font-size: 20px; font-weight: 800;
+    letter-spacing: 1px; color: #fff; position: relative;
+  }
+  .sec-bar-red { background: #D40000; }
+  .sec-bar-blue { background: #003082; }
+  .sec-bar::after {
+    content: ''; position: absolute; right: 48px; top: 50%;
+    transform: translateY(-50%);
+    width: 24px; height: 24px; border-radius: 50%;
+    background: rgba(255,255,255,0.2);
+  }
+
+  /* ── Person Card ── */
+  .cards { padding: 24px 48px 8px; }
+  .person {
+    display: grid; grid-template-columns: 72px 1fr;
+    gap: 0 20px; margin-bottom: 24px; padding-bottom: 24px;
+    border-bottom: 1px solid #eee;
+  }
+  .person:last-child { border-bottom: none; margin-bottom: 0; padding-bottom: 0; }
+
+  .gc { display: flex; flex-direction: column; align-items: center; padding-top: 4px; }
+  .gb {
+    width: 60px; height: 60px; border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 30px; font-weight: 800;
+  }
+  .gb-red { background: #D40000; color: #fff; }
+  .gb-yel { background: #F5C518; color: #1a1a1a; }
+  .gb-blue { background: #003082; color: #fff; }
+  .gb-gry { background: #e0e0e0; color: #999; font-size: 20px; }
+  .gb-sfx { font-size: 18px; font-weight: 700; }
+
+  .pn { font-size: 26px; font-weight: 800; line-height: 1.1; margin-bottom: 2px; }
+  .pr { font-size: 14px; color: #666; margin-bottom: 10px; }
+  .pu { list-style: none; padding: 0; }
+  .pu li {
+    font-size: 13px; line-height: 1.7; color: #333;
+    margin-bottom: 6px; padding-left: 14px; position: relative;
+  }
+  .pu li::before {
+    content: ''; position: absolute; left: 0; top: 9px;
+    width: 6px; height: 6px; border-radius: 50%;
+  }
+  .br li::before { background: #D40000; }
+  .by li::before { background: #F5C518; }
+  .bb li::before { background: #003082; }
+  .bg li::before { background: #ccc; }
+  .pu li strong { font-weight: 700; color: #1a1a1a; }
+
+  /* ── Verdict ── */
+  .verdict-bar {
+    background: #1a1a1a; padding: 28px 48px 32px;
+    margin-top: 8px; position: relative;
+  }
+  .verdict-bar .v-accent {
+    position: absolute; left: 48px; top: -12px;
+    width: 24px; height: 24px; background: #D40000;
+    transform: rotate(45deg);
+  }
+  .v-label {
+    font-size: 12px; font-weight: 800; letter-spacing: 3px;
+    color: #D40000; margin-bottom: 8px;
+  }
+  .v-text {
+    font-size: 15px; font-weight: 500; line-height: 1.8; color: #fff;
+  }
+  .v-sig {
+    margin-top: 20px; text-align: right;
+    font-size: 12px; font-weight: 600; color: rgba(255,255,255,0.4);
+    letter-spacing: 1px;
+  }
+
+  /* ── Footer Shapes ── */
+  .footer-geo {
+    display: flex; align-items: center; justify-content: center;
+    gap: 20px; padding: 28px 0 20px;
+  }
+  .fg-circle { width: 16px; height: 16px; border-radius: 50%; background: #D40000; }
+  .fg-square { width: 14px; height: 14px; background: #003082; }
+  .fg-tri {
+    width: 0; height: 0;
+    border-left: 9px solid transparent;
+    border-right: 9px solid transparent;
+    border-bottom: 16px solid #F5C518;
+  }
+</style>
+</head>
+<body>
+<div class="page">
+
+  <!-- ══ Header ══ -->
+  <div class="hdr">
+    <div class="hdr-circle"></div>
+    <div class="hdr-tri"></div>
+    <div class="hdr-date">04.19</div>
+    <div class="hdr-title">AKASO 360</div>
+    <div class="hdr-sub-line">项目判断卡</div>
+  </div>
+  <div class="hdr-meta">基于 42 条客诉归因校准 + 28,511 条 VOC + 飞书群沟通记录</div>
+
+  <!-- ══ Data: Attribution ══ -->
+  <div class="data-wrap">
+    <div class="data-lbl">DATA</div>
+    <div class="data-row">
+      <div class="data-left">
+        <div class="bar-row">
+          <span class="bar-label">产品定义</span>
+          <div class="bar-track"><div class="bar-fill" style="width:100%;background:#D40000;">12</div></div>
+        </div>
+        <div class="bar-row">
+          <span class="bar-label">软件/固件</span>
+          <div class="bar-track"><div class="bar-fill" style="width:83%;background:#003082;">10</div></div>
+        </div>
+        <div class="bar-row">
+          <span class="bar-label">硬件缺陷</span>
+          <div class="bar-track"><div class="bar-fill" style="width:67%;background:#1a1a1a;">8</div></div>
+        </div>
+        <div class="bar-row">
+          <span class="bar-label">使用预期</span>
+          <div class="bar-track"><div class="bar-fill" style="width:58%;background:#bbb;">7</div></div>
+        </div>
+        <div class="bar-row">
+          <span class="bar-label">生产品质</span>
+          <div class="bar-track"><div class="bar-fill bf-yel" style="width:42%;background:#F5C518;">5</div></div>
+        </div>
+      </div>
+      <div class="data-right">
+        <div class="dev-ring">
+          <span class="dr-num">9</span>
+          <span class="dr-unit">条 · 21%</span>
+          <span class="dr-lbl">归因偏差</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══ Data: Metric Circles ══ -->
+  <div class="metrics">
+    <div class="mc">
+      <div class="mc-circle mc-dark">
+        <span class="mc-num">3.83</span>
+        <span class="mc-from">← 4.73</span>
+        <span class="mc-tag" style="background:#D40000;">▼19%</span>
+      </div>
+      <span class="mc-label">星级走势</span>
+      <div class="mc-trends">
+        <div class="mc-tr"><span class="mc-tr-lbl">种子</span><div class="mc-tr-track"><div class="mc-tr-fill" style="width:95%;background:rgba(0,0,0,0.15);"></div></div></div>
+        <div class="mc-tr"><span class="mc-tr-lbl">有机</span><div class="mc-tr-track"><div class="mc-tr-fill" style="width:77%;background:#1a1a1a;"></div></div></div>
+      </div>
+    </div>
+    <div class="mc">
+      <div class="mc-circle mc-red">
+        <span class="mc-num">14.7%</span>
+        <span class="mc-from">← 1.3%</span>
+        <span class="mc-tag" style="background:#fff;color:#D40000;">×11</span>
+      </div>
+      <span class="mc-label">电池负面</span>
+      <div class="mc-trends">
+        <div class="mc-tr"><span class="mc-tr-lbl">种子</span><div class="mc-tr-track"><div class="mc-tr-fill" style="width:7%;background:#ffcdd2;"></div></div></div>
+        <div class="mc-tr"><span class="mc-tr-lbl">有机</span><div class="mc-tr-track"><div class="mc-tr-fill" style="width:74%;background:#D40000;"></div></div></div>
+      </div>
+    </div>
+    <div class="mc">
+      <div class="mc-circle mc-blue">
+        <span class="mc-num">19%</span>
+        <span class="mc-from">← 6%</span>
+        <span class="mc-tag" style="background:#fff;color:#003082;">×3</span>
+      </div>
+      <span class="mc-label">APP 负面</span>
+      <div class="mc-trends">
+        <div class="mc-tr"><span class="mc-tr-lbl">种子</span><div class="mc-tr-track"><div class="mc-tr-fill" style="width:30%;background:#b3c5e6;"></div></div></div>
+        <div class="mc-tr"><span class="mc-tr-lbl">有机</span><div class="mc-tr-track"><div class="mc-tr-fill" style="width:95%;background:#003082;"></div></div></div>
+      </div>
+    </div>
+    <div class="mc">
+      <div class="mc-circle mc-yel">
+        <span class="mc-num">3</span>
+        <span class="mc-from">漏项</span>
+      </div>
+      <span class="mc-label">群内→未入表</span>
+    </div>
+  </div>
+
+  <!-- ══ 赛纳方 ══ -->
+  <div class="sec-bar sec-bar-red">赛纳方（甲方）</div>
+  <div class="cards">
+    <div class="person">
+      <div class="gc"><div class="gb gb-red">C</div></div>
+      <div>
+        <div class="pn">陈嘉威</div>
+        <div class="pr">AKASO 360 产品经理</div>
+        <ul class="pu br">
+          <li><strong>站位错误</strong>——说话口吻跟乙方技术支持一样：先解释产品限制、再引导用户排查。作为甲方产品经理，应该站在用户这边跟乙方要东西</li>
+          <li><strong>电池续航 VOC 负面从 1.3% 飙到 14.7%</strong>，他的回应是"我倾向于相信是电池有问题"然后停了——分析完没推 action</li>
+          <li><strong>过热问题</strong>，他说"这个季节不太会触发过热……用户自行将设置调成了标准"——把产品定义问题归因成用户使用错误</li>
+          <li><strong>弱光画质差 2 倍于竞品</strong>，紫色光斑他说"这个现象我也是第一次见"——产品经理不了解自己产品的光学边界</li>
+          <li><strong>APP 负面占比从 6% 飙到 19%</strong>，360 相机不能直出、必须经 APP 编辑才能社交分享——APP 是产品的一半，但产品经理没有把 APP 当核心产品管</li>
+        </ul>
+      </div>
+    </div>
+    <div class="person">
+      <div class="gc"><div class="gb gb-yel">B<span class="gb-sfx">-</span></div></div>
+      <div>
+        <div class="pn">王金娥</div>
+        <div class="pr">配件产品经理</div>
+        <ul class="pu by">
+          <li><strong>有推责倾向但在推进解决</strong>——自拍杆断裂第一反应是"用户使用不当""快速指南里有提到"，但后续推动了结构改善（新锁紧结构 3 倍牢固力，正在改模）</li>
+          <li>在推 listing 引导优化（加双蟹钳夹特写图），有售前预防意识</li>
+          <li><strong>短板</strong>：1/4 螺丝脱落的工厂品质检讨提了但没看到关闭</li>
+        </ul>
+      </div>
+    </div>
+    <div class="person">
+      <div class="gc"><div class="gb gb-red">C<span class="gb-sfx">+</span></div></div>
+      <div>
+        <div class="pn">郭智恩</div>
+        <div class="pr">产品质量改善主导人(A)</div>
+        <ul class="pu br">
+          <li><strong>立场缺位</strong>——归因是赛纳方负责填的，但"设计实现""使用预期"这些标签没穿透到产品定义层。该甲方校准的归因，他没校准</li>
+          <li><strong>推而不动</strong>——4/14 推了 5 个节点追踪，1 个有回应。没有升级、没有对乙方的约束动作——推了不等于推动了</li>
+          <li><strong>漏项未收</strong>——OTA 变砖、电池无法供电开机、自拍杆断裂，群里讨论了但没进跟进表</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══ 看到方 ══ -->
+  <div class="sec-bar sec-bar-blue">看到方（乙方）</div>
+  <div class="cards">
+    <div class="person">
+      <div class="gc"><div class="gb gb-red">C<span class="gb-sfx">+</span></div></div>
+      <div>
+        <div class="pn">陈鹏飞</div>
+        <div class="pr">乙方项目经理</div>
+        <ul class="pu br">
+          <li><strong>对甲方追的时间节点回应不够</strong>：5 个节点只回了 1 个</li>
+          <li>确认了"电池本身没有过热保护功能"这类关键技术事实，但没有主动提出解决方案</li>
+          <li>需要更主动地给时间承诺</li>
+        </ul>
+      </div>
+    </div>
+    <div class="person">
+      <div class="gc"><div class="gb gb-yel">B</div></div>
+      <div>
+        <div class="pn">张舒华</div>
+        <div class="pr">乙方技术 / 翻译</div>
+        <ul class="pu by">
+          <li><strong>在做事</strong>：翻译文档、添加多语言列、固件文案</li>
+          <li>优化跟进表里"看到反馈"栏的大量技术回复出自他——给了 SOP、给了排查步骤</li>
+          <li><strong>回复模式问题</strong>：是"引导用户排查"而不是"从根因解决"——每个问题都先给 SOP 走一遍，像客服手册不像工程师</li>
+        </ul>
+      </div>
+    </div>
+    <div class="person">
+      <div class="gc"><div class="gb gb-gry">--</div></div>
+      <div>
+        <div class="pn">颜癸悦</div>
+        <div class="pr">乙方</div>
+        <ul class="pu bg"><li>群内发言少，信息不足，未评</li></ul>
+      </div>
+    </div>
+    <div class="person">
+      <div class="gc"><div class="gb gb-gry">--</div></div>
+      <div>
+        <div class="pn">张琰</div>
+        <div class="pr">乙方</div>
+        <ul class="pu bg"><li>群内发言少，信息不足，未评</li></ul>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══ Verdict ══ -->
+  <div class="verdict-bar">
+    <div class="v-accent"></div>
+    <div class="v-label">核心判断</div>
+    <div class="v-text">产品经理在帮乙方跟用户解释，而不是帮用户跟乙方要东西。归因失真不是能力问题，是立场问题。质量改善主导人在推流程，不是在推结果。</div>
+    <div class="v-sig">彭蕾 × C2（向量世界）</div>
+  </div>
+
+  <!-- Footer -->
+  <div class="footer-geo">
+    <div class="fg-circle"></div>
+    <div class="fg-square"></div>
+    <div class="fg-tri"></div>
+  </div>
+
+</div>
+</body>
+</html>
